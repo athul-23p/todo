@@ -7,7 +7,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   justify-content: center;
- background-image: linear-gradient(to right top, #124faf, #0084dd, #00b1c9, #00d581, #a8eb12);
+ background-color: aquamarine;
  background-attachment:fixed;
   height: 100vh;
 }
