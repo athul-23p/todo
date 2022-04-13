@@ -1,13 +1,14 @@
 import { TodoInput } from "./TodoInput";
 import { useState } from "react";
-import TodoItem from "./TodoItem";
 import { nanoid } from "nanoid";
-import './todo.css';
-function Todo() {
-  const [todosList, setTodosList] = useState([
-    { title: "learn react", status: false, id: nanoid(4) },
-  ]);
+import TodoList from "./TodoLIst";
 
+function Todo() {
+  const [todosList, setTodosList] = useState(
+    JSON.parse(localStorage.getItem("todos")) || []
+  );
+
+  // function to add new todos
   const getData = (todo) => {
     if (todo === "") {
       return;
@@ -17,25 +18,28 @@ function Todo() {
       status: false,
       id: nanoid(4),
     };
-    setTodosList([payload, ...todosList]);
+    const newTodos = [payload, ...todosList];
+    localStorage.setItem("todos", JSON.stringify(newTodos));
+    setTodosList(newTodos);
   };
 
+  // function to toggle todo status
   const handleStatus = (id) => {
-    setTodosList(
-      todosList.map((el) => (el.id === id ? { ...el, status: !el.status } : el))
+    const newTodos = todosList.map((el) =>
+      el.id === id ? { ...el, status: !el.status } : el
     );
+    storeAndUpdateTodos(newTodos);
+  };
+
+  const storeAndUpdateTodos = (todos) => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+    setTodosList(todos);
   };
 
   return (
     <div>
-      <div id="input-control">
-        <TodoInput addTodoHandler={getData} />
-      </div>
-      <div id="list-container">
-        {todosList.map((el) => (
-          <TodoItem data={el} changeStatus={handleStatus} />
-        ))}
-      </div>
+      <TodoInput addTodoHandler={getData} />
+      <TodoList data={todosList} statusHandler={handleStatus} />
     </div>
   );
 }
